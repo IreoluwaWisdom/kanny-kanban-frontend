@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+    
+    /* Kanny Design System Colors */
+    --primary-50: #f8fbff;
+    --primary-100: #e4eeff;
+    --primary-200: #c2d8ff;
+    --primary-300: #93baff;
+    --primary-400: #5694ff;
+    --primary-500: #0b65ff;
+    --primary-600: #0041b2;
+    --primary-700: #001c4d;
+    --primary-800: #000c22;
+    --primary-900: #000389;
+    --primary-950: #000000;
+    
+    --neutral-50: #fdfdfd;
+    --neutral-100: #f6f6f7;
+    --neutral-200: #ebebec;
+    --neutral-300: #dbdbde;
+    --neutral-400: #c7c7cb;
+    --neutral-500: #aeaeb5;
+    --neutral-600: #91919a;
+    --neutral-700: #71717a;
+    --neutral-800: #404045;
+    --neutral-900: #222225;
+    --neutral-950: #18181b;
+    
+    --error-50: #fef2f2;
+    --error-400: #ff6567;
+    
+    --progress: #f59606;
+    --completed: #22c55e;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
