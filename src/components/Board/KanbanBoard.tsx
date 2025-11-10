@@ -65,6 +65,8 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [cardToDelete, setCardToDelete] = useState<CardType | null>(null);
   const [addingCardColumnId, setAddingCardColumnId] = useState<string | null>(null);
+  const [savingCardColumnId, setSavingCardColumnId] = useState<string | null>(null);
+  const [modalSaving, setModalSaving] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -138,8 +140,13 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
 
   const handleAddCard = async (columnId: string, title: string, description: string) => {
     if (title.trim()) {
-      await createCard(columnId, title.trim(), description.trim() || undefined);
-      setAddingCardColumnId(null);
+      try {
+        setSavingCardColumnId(columnId);
+        await createCard(columnId, title.trim(), description.trim() || undefined);
+      } finally {
+        setSavingCardColumnId(null);
+        setAddingCardColumnId(null);
+      }
     }
   };
 
@@ -159,11 +166,16 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
 
   const handleModalAddCard = async () => {
     if (newCardTitle.trim() && targetColumnId) {
-      await createCard(targetColumnId, newCardTitle.trim(), newCardDescription.trim() || undefined);
-      setNewCardTitle('');
-      setNewCardDescription('');
-      setTargetColumnId(null);
-      setShowAddCardModal(false);
+      try {
+        setModalSaving(true);
+        await createCard(targetColumnId, newCardTitle.trim(), newCardDescription.trim() || undefined);
+        setNewCardTitle('');
+        setNewCardDescription('');
+        setTargetColumnId(null);
+        setShowAddCardModal(false);
+      } finally {
+        setModalSaving(false);
+      }
     }
   };
 
@@ -236,7 +248,7 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
       </div>
 
       {/* Main Board Area */}
-      <div className="flex-1 overflow-x-auto overflow-y-hidden p-3 sm:p-4 md:p-6 bg-neutral-100 min-h-0">
+      <div className="flex-1 overflow-x-auto overflow-y-hidden p-3 sm:p-4 md:p-6 bg-neutral-100 min-h-0 max-h-[calc(100dvh-120px)] md:max-h-none">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCorners}
@@ -257,6 +269,7 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
                   onAddCard={openAddCardModal}
                   onUpdateColumn={updateColumn}
                   isAddingCard={addingCardColumnId === column.id}
+                  isSavingCard={savingCardColumnId === column.id}
                   onCancelAddCard={handleCancelAddCard}
                   onSaveCard={(title, description) => handleAddCard(column.id, title, description)}
                 />
@@ -316,8 +329,12 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
               }}>
                 Close
               </Button>
-              <Button onClick={handleModalAddCard} disabled={!newCardTitle.trim()}>
-                Add +
+              <Button onClick={handleModalAddCard} disabled={!newCardTitle.trim() || modalSaving}>
+                {modalSaving ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                ) : (
+                  'Add +'
+                )}
               </Button>
             </div>
           </div>

@@ -33,6 +33,7 @@ interface ColumnProps {
   onAddCard: (columnId: string) => void;
   onUpdateColumn: (columnId: string, name: string) => void;
   isAddingCard?: boolean;
+  isSavingCard?: boolean;
   onCancelAddCard?: () => void;
   onSaveCard?: (title: string, description: string) => void;
 }
@@ -44,6 +45,7 @@ export function Column({
   onAddCard, 
   onUpdateColumn,
   isAddingCard = false,
+  isSavingCard = false,
   onCancelAddCard,
   onSaveCard
 }: ColumnProps) {
@@ -238,11 +240,15 @@ export function Column({
                 </Button>
                 <Button
                   size="icon"
-                  className="h-8 w-8 bg-primary-500 hover:bg-primary-600 text-white"
+                  className="h-8 w-8 bg-primary-500 hover:bg-primary-600 text-white disabled:opacity-70"
                   onClick={handleSaveCard}
-                  disabled={!newCardTitle.trim()}
+                  disabled={!newCardTitle.trim() || isSavingCard}
                 >
-                  <Check className="h-4 w-4" />
+                  {isSavingCard ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                  ) : (
+                    <Check className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             </div>

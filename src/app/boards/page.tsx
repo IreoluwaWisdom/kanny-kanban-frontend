@@ -43,7 +43,8 @@ export default function BoardsPage() {
       const newBoard = await createBoard(newBoardName.trim());
       setShowCreateModal(false);
       setNewBoardName('');
-      router.push(`/boards/${newBoard.id}`);
+      // Navigate to the generic board view (current board)
+      router.push('/board');
     } catch (error) {
       console.error('Failed to create board:', error);
     } finally {
@@ -188,7 +189,7 @@ export default function BoardsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {boards.map((board) => (
-              <Link key={board.id} href={`/boards/${board.id}`}>
+              <Link key={board.id} href={'/board'}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer h-32 bg-white border border-neutral-200">
                   <CardHeader>
                     <CardTitle className="text-lg text-neutral-900">{board.name}</CardTitle>
@@ -221,4 +222,3 @@ export default function BoardsPage() {
     </div>
   );
 }
-

@@ -18,7 +18,6 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
-  firebaseLogin: (idToken: string) => Promise<void>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -89,19 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const firebaseLogin = async (idToken: string) => {
-    try {
-      logger.log('Logging in with Firebase...');
-      const response = await api.firebaseAuth(idToken);
-      logger.log('Firebase login response:', response);
-      localStorage.setItem('accessToken', response.accessToken);
-      setUser(response.user);
-    } catch (error) {
-      const apiError = error as ApiError;
-      logger.error('Firebase login error:', apiError);
-      throw new Error(getUserFriendlyError(apiError.message || 'Firebase login failed'));
-    }
-  };
+  // Google/Firebase login removed
 
   const logout = async () => {
     try {
@@ -122,7 +109,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         login,
         signup,
-        firebaseLogin,
         logout,
         isAuthenticated: !!user,
       }}
@@ -139,4 +125,3 @@ export function useAuth() {
   }
   return context;
 }
-

@@ -78,7 +78,7 @@ export function Sidebar() {
         className={`
           ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
           ${sidebarWidth}
-          bg-white border-r border-neutral-200 flex flex-col h-full fixed md:relative z-30 transition-all duration-300 ease-in-out
+          bg-white border-r border-neutral-200 flex flex-col h-full fixed md:relative z-50 transition-all duration-300 ease-in-out
           shadow-lg md:shadow-none
         `}
       >

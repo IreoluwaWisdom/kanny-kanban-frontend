@@ -10,7 +10,7 @@ A modern, full-featured Kanban board application built with Next.js 14, TypeScri
 - **Drag & Drop**: dnd-kit
 - **State Management**: React Context API
 - **Testing**: Jest + React Testing Library
-- **Deployment**: Vercel
+- **Deployment**: Firebase Hosting (static export)
 
 ## Features
 
@@ -96,13 +96,25 @@ The frontend communicates with the backend API. Make sure the backend is running
 
 ## Deployment
 
-### Vercel
+### Firebase Hosting
 
-1. Push your code to GitHub
-2. Import the project in Vercel
-3. Set environment variables:
-   - `NEXT_PUBLIC_API_URL` - Your backend API URL
-4. Deploy!
+1. Install Firebase CLI (once):
+```bash
+npm install -g firebase-tools
+```
+
+2. Login and select project:
+```bash
+npm run firebase:login
+firebase use kannykaban
+```
+
+3. Deploy (builds static export and deploys to Hosting):
+```bash
+npm run deploy
+```
+
+This runs a static export build (`NEXT_OUTPUT=export`) with `NEXT_PUBLIC_API_URL` set at build time and deploys the generated `out/` directory. Ensure `NEXT_PUBLIC_API_URL` points to your backend (e.g., `https://kanny-kanban-backend.onrender.com/api`).
 
 ## Environment Variables
 
@@ -111,4 +123,3 @@ The frontend communicates with the backend API. Make sure the backend is running
 ## License
 
 MIT
-

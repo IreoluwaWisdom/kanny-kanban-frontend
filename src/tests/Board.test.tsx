@@ -6,6 +6,7 @@ import { useBoard } from '@/context/BoardContext';
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
+  usePathname: jest.fn(() => '/board'),
 }));
 
 jest.mock('@/context/AuthContext', () => ({
@@ -43,8 +44,23 @@ describe('Board Page', () => {
     });
     (useBoard as jest.Mock).mockReturnValue({
       currentBoard: null,
+      boards: [],
       loading: true,
+      error: null,
+      setCurrentBoard: jest.fn(),
+      loadBoards: jest.fn(),
+      loadBoard: jest.fn(),
       loadCurrentBoard: jest.fn(),
+      createBoard: jest.fn(),
+      updateBoard: jest.fn(),
+      deleteBoard: jest.fn(),
+      createColumn: jest.fn(),
+      updateColumn: jest.fn(),
+      deleteColumn: jest.fn(),
+      createCard: jest.fn(),
+      updateCard: jest.fn(),
+      deleteCard: jest.fn(),
+      moveCard: jest.fn(),
     });
 
     render(<BoardPage />);
@@ -70,8 +86,23 @@ describe('Board Page', () => {
     });
     (useBoard as jest.Mock).mockReturnValue({
       currentBoard: mockBoard,
+      boards: [],
       loading: false,
+      error: null,
+      setCurrentBoard: jest.fn(),
+      loadBoards: jest.fn(),
+      loadBoard: jest.fn(),
       loadCurrentBoard: jest.fn(),
+      createBoard: jest.fn(),
+      updateBoard: jest.fn(),
+      deleteBoard: jest.fn(),
+      createColumn: jest.fn(),
+      updateColumn: jest.fn(),
+      deleteColumn: jest.fn(),
+      createCard: jest.fn(),
+      updateCard: jest.fn(),
+      deleteCard: jest.fn(),
+      moveCard: jest.fn(),
     });
 
     render(<BoardPage />);

@@ -92,3 +92,11 @@
   }
 }
 
+/* Mobile: lock viewport height and disable page scroll */
+@media (max-width: 767px) {
+  html, body {
+    height: 100vh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+}

@@ -47,7 +47,6 @@ interface BoardContextType {
   updateCard: (cardId: string, title: string, description?: string) => Promise<void>;
   deleteCard: (cardId: string) => Promise<void>;
   moveCard: (cardId: string, columnId: string, position: number) => Promise<void>;
-  currentBoard: Board | null;
 }
 
 const BoardContext = createContext<BoardContextType | undefined>(undefined);
@@ -369,4 +368,3 @@ export function useBoard() {
   }
   return context;
 }
-

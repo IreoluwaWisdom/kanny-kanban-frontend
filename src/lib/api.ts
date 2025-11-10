@@ -20,9 +20,9 @@ export class ApiClient {
       ? localStorage.getItem('accessToken') 
       : null;
 
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      ...options.headers,
+      ...(options.headers as Record<string, string> | undefined),
     };
 
     if (token) {
@@ -87,13 +87,7 @@ export class ApiClient {
   }
 
   async firebaseAuth(idToken: string) {
-    return this.request<{ accessToken: string; user: { id: string; email: string; name: string; avatar?: string } }>(
-      '/auth/firebase',
-      {
-        method: 'POST',
-        body: JSON.stringify({ idToken }),
-      },
-    );
+    throw { message: 'Google authentication is disabled' } as ApiError;
   }
 
   async logout() {
@@ -234,4 +228,3 @@ export class ApiClient {
 }
 
 export const api = new ApiClient();
-
