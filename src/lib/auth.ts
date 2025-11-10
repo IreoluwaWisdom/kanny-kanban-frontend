@@ -1,15 +1,21 @@
-import { cookies } from 'next/headers';
+/**
+ * Client-side auth utilities
+ * Note: Server-side cookies are not available with static export
+ * All auth is handled client-side via localStorage and HttpOnly cookies
+ */
 
-export async function getServerSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('refreshToken');
-  
-  if (!token) {
-    return null;
-  }
+export function getAccessToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('accessToken');
+}
 
-  // In a real app, you'd verify the token here
-  // For now, we'll just check if it exists
-  return { token: token.value };
+export function setAccessToken(token: string): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem('accessToken', token);
+}
+
+export function removeAccessToken(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem('accessToken');
 }
 
