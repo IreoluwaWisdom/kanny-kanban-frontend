@@ -25,6 +25,27 @@ describe('Board Page', () => {
     (useRouter as jest.Mock).mockReturnValue({
       push: mockPush,
     });
+    // Default BoardContext mock to avoid undefined destructuring
+    (useBoard as jest.Mock).mockReturnValue({
+      currentBoard: null,
+      boards: [],
+      loading: false,
+      error: null,
+      setCurrentBoard: jest.fn(),
+      loadBoards: jest.fn(),
+      loadBoard: jest.fn(),
+      loadCurrentBoard: jest.fn(),
+      createBoard: jest.fn(),
+      updateBoard: jest.fn(),
+      deleteBoard: jest.fn(),
+      createColumn: jest.fn(),
+      updateColumn: jest.fn(),
+      deleteColumn: jest.fn(),
+      createCard: jest.fn(),
+      updateCard: jest.fn(),
+      deleteCard: jest.fn(),
+      moveCard: jest.fn(),
+    });
   });
 
   it('redirects to login when not authenticated', () => {
@@ -111,4 +132,3 @@ describe('Board Page', () => {
     });
   });
 });
-
