@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, googleLogin, resetPassword, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -25,6 +26,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     try {
@@ -32,7 +34,16 @@ export default function LoginPage() {
       router.push('/board');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed';
-      setError(errorMessage.includes('Unable to') || errorMessage.includes('Please') ? errorMessage : 'Unable to sign in. Please check your credentials and try again.');
+      // Treat verification prompts as informative (green) and others as errors (red)
+      if (/verify your email/i.test(errorMessage)) {
+        setSuccess(errorMessage);
+      } else {
+        setError(
+          errorMessage.includes('Unable to') || errorMessage.includes('Please')
+            ? errorMessage
+            : 'Unable to sign in. Please check your credentials and try again.'
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -42,6 +53,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       setError('');
+      setSuccess('');
       await googleLogin();
       router.push('/board');
     } catch (err: any) {
@@ -70,8 +82,13 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+              <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
                 {error}
+              </div>
+            )}
+            {success && (
+              <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+                {success}
               </div>
             )}
             <div className="space-y-2">
@@ -113,11 +130,12 @@ export default function LoginPage() {
                 disabled={loading || !email}
                 onClick={async () => {
                   setError('');
+                  setSuccess('');
                   try {
                     if (!email) return;
                     setLoading(true);
                     await resetPassword(email);
-                    alert('Password reset email sent. Check your inbox.');
+                    setSuccess('Password reset email sent. Please check your inbox.');
                   } catch (e: any) {
                     setError('Could not send reset email. Please verify the email.');
                   } finally {

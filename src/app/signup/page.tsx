@@ -13,6 +13,7 @@ export default function SignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const { signup, googleLogin, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
     setLoading(true);
 
     try {
@@ -33,7 +35,16 @@ export default function SignupPage() {
       router.push('/board');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Signup failed';
-      setError(errorMessage.includes('Unable to') || errorMessage.includes('Please') ? errorMessage : 'Unable to create account. Please try again.');
+      // Treat verification sent as success
+      if (/verification email sent/i.test(errorMessage)) {
+        setSuccess(errorMessage);
+      } else {
+        setError(
+          errorMessage.includes('Unable to') || errorMessage.includes('Please')
+            ? errorMessage
+            : 'Unable to create account. Please try again.'
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -71,8 +82,13 @@ export default function SignupPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+              <div className="p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
                 {error}
+              </div>
+            )}
+            {success && (
+              <div className="p-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+                {success}
               </div>
             )}
             <div className="space-y-2">
