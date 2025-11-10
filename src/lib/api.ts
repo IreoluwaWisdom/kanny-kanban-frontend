@@ -87,7 +87,13 @@ export class ApiClient {
   }
 
   async firebaseAuth(idToken: string) {
-    throw { message: 'Google authentication is disabled' } as ApiError;
+    return this.request<{ accessToken: string; user: { id: string; email: string; name: string; avatar?: string } }>(
+      '/auth/firebase',
+      {
+        method: 'POST',
+        body: JSON.stringify({ idToken }),
+      },
+    );
   }
 
   async logout() {

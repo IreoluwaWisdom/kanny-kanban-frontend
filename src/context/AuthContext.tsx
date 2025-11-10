@@ -5,6 +5,8 @@ import { api, ApiError } from '@/lib/api';
 import { getUserFriendlyError } from '@/lib/errorMessages';
 import { logger } from '@/lib/logger';
 import Cookies from 'js-cookie';
+import { auth, googleProvider } from '@/lib/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, sendPasswordResetEmail } from 'firebase/auth';
 
 interface User {
   id: string;
@@ -18,6 +20,8 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
+  googleLogin: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
@@ -63,8 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       logger.log('Logging in...');
-      const response = await api.login(email, password);
-      logger.log('Login response:', response);
+      // Firebase email/password auth then exchange for backend tokens
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      if (!cred.user.emailVerified) {
+        const { sendEmailVerification } = await import('firebase/auth');
+        await sendEmailVerification(cred.user, { url: `${window.location.origin}/login` });
+        throw new Error('Please verify your email. A new verification email has been sent.');
+      }
+      const idToken = await cred.user.getIdToken();
+      const response = await api.firebaseAuth(idToken);
       localStorage.setItem('accessToken', response.accessToken);
       setUser(response.user);
     } catch (error) {
@@ -77,10 +88,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signup = async (email: string, password: string, name: string) => {
     try {
       logger.log('Signing up...');
-      const response = await api.signup(email, password, name);
-      logger.log('Signup response:', response);
-      localStorage.setItem('accessToken', response.accessToken);
-      setUser(response.user);
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      if (!cred.user.emailVerified) {
+        const { sendEmailVerification } = await import('firebase/auth');
+        await sendEmailVerification(cred.user, { url: `${window.location.origin}/login` });
+        throw new Error('Verification email sent. Please check your inbox and verify before signing in.');
+      } else {
+        const idToken = await cred.user.getIdToken();
+        const response = await api.firebaseAuth(idToken);
+        localStorage.setItem('accessToken', response.accessToken);
+        setUser(response.user);
+      }
     } catch (error) {
       const apiError = error as ApiError;
       logger.error('Signup error:', apiError);
@@ -88,7 +106,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Google/Firebase login removed
+  const googleLogin = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    const idToken = await result.user.getIdToken();
+    const response = await api.firebaseAuth(idToken);
+    localStorage.setItem('accessToken', response.accessToken);
+    setUser(response.user);
+  };
+
+  const resetPassword = async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
+  };
 
   const logout = async () => {
     try {
@@ -109,6 +137,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         login,
         signup,
+        googleLogin,
+        resetPassword,
         logout,
         isAuthenticated: !!user,
       }}

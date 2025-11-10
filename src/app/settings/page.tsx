@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { KannyLogo } from '@/components/ui/logo';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,8 +44,10 @@ export default function SettingsPage() {
         {/* Header */}
         <div className="bg-white border-b border-neutral-200 px-6 py-4 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <KannyLogo size="md" />
-            <h1 className="text-2xl font-bold text-neutral-900">Settings</h1>
+            <Link href="/" aria-label="Go to Home" className="flex items-center gap-3">
+              <KannyLogo size="md" />
+              <h1 className="text-2xl font-bold text-neutral-900">Settings</h1>
+            </Link>
           </div>
         </div>
 
@@ -167,8 +170,10 @@ export default function SettingsPage() {
         {/* Footer */}
         <div className="w-full bg-white border-t border-neutral-200 px-4 md:px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-sm text-neutral-600 gap-2 flex-shrink-0">
           <div className="flex items-center gap-2">
-            <KannyLogo size="sm" />
-            <span>Kanny © 2025</span>
+            <Link href="/" aria-label="Go to Home" className="flex items-center gap-2">
+              <KannyLogo size="sm" />
+              <span>Kanny © 2025</span>
+            </Link>
           </div>
           <span>Designed by 17/32</span>
         </div>
@@ -176,4 +181,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-

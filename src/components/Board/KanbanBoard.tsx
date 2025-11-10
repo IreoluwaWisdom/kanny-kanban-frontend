@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, Trash2 } from 'lucide-react';
 import { useDroppable } from '@dnd-kit/core';
 import { KannyLogo } from '@/components/ui/logo';
+import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 
 interface KanbanBoardProps {
@@ -67,6 +68,14 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
   const [addingCardColumnId, setAddingCardColumnId] = useState<string | null>(null);
   const [savingCardColumnId, setSavingCardColumnId] = useState<string | null>(null);
   const [modalSaving, setModalSaving] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(typeof window !== 'undefined' ? window.innerWidth >= 768 : true);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -196,8 +205,10 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
         <div className="bg-white border-b border-neutral-200 px-6 py-4 flex-shrink-0 w-full z-20 relative">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <KannyLogo size="md" />
-              <h1 className="text-2xl font-bold text-neutral-900">{currentBoard?.name || 'Kanny'}</h1>
+              <Link href="/" aria-label="Go to Home" className="flex items-center gap-3">
+                <KannyLogo size="md" />
+                <h1 className="text-2xl font-bold text-neutral-900">Kanny</h1>
+              </Link>
             </div>
           </div>
         </div>
@@ -219,10 +230,10 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
       <div className="bg-white border-b border-neutral-200 px-3 sm:px-4 md:px-6 py-3 md:py-4 flex-shrink-0 w-full z-20 relative">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-            <KannyLogo size="md" />
-            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 truncate">
-              {currentBoard?.name || 'Kanny'}
-            </h1>
+            <Link href="/" aria-label="Go to Home" className="flex items-center gap-2 sm:gap-3">
+              <KannyLogo size="md" />
+              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-neutral-900 truncate">Kanny</h1>
+            </Link>
           </div>
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <span className="text-xs sm:text-sm text-neutral-600 hidden sm:inline truncate max-w-[100px] md:max-w-none">
@@ -275,8 +286,8 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
                 />
               )) || []}
             </SortableContext>
-            {/* Delete Column - Drop zone for deleting cards - Only show if columns exist */}
-            {hasColumns && <DeleteColumn />}
+            {/* Delete Column - Only show on desktop */}
+            {hasColumns && isDesktop && <DeleteColumn />}
           </div>
 
           <DragOverlay>
@@ -295,8 +306,10 @@ export function KanbanBoard({ boardId }: KanbanBoardProps) {
       {/* Footer - Extends over sidebar */}
       <div className="w-full bg-white border-t border-neutral-200 px-4 md:px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-sm text-neutral-600 gap-2 flex-shrink-0 z-20">
         <div className="flex items-center gap-2">
-          <KannyLogo size="sm" />
-          <span>Kanny © 2025</span>
+          <Link href="/" aria-label="Go to Home" className="flex items-center gap-2">
+            <KannyLogo size="sm" />
+            <span>Kanny © 2025</span>
+          </Link>
         </div>
         <span>Designed by 17/32</span>
       </div>

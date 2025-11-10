@@ -81,13 +81,13 @@ export default function BoardsPage() {
         {/* Header */}
         <div className="bg-white border-b border-neutral-200 px-6 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3" aria-label="Go to Home">
               <div className="relative h-8 w-8">
                 <div className="absolute inset-0 bg-black rounded-full"></div>
                 <div className="absolute inset-0 bg-black rounded-full translate-x-1 translate-y-1"></div>
               </div>
               <h1 className="text-2xl font-bold text-neutral-900">Kanny</h1>
-            </div>
+            </Link>
             <div className="flex items-center gap-4">
               <span className="text-sm text-neutral-600">{user?.name}</span>
               {user?.avatar ? (
@@ -210,11 +210,13 @@ export default function BoardsPage() {
         {/* Footer */}
         <div className="w-full bg-white border-t border-neutral-200 px-4 md:px-6 py-3 flex flex-col sm:flex-row items-center justify-between text-sm text-neutral-600 gap-2 flex-shrink-0">
           <div className="flex items-center gap-2">
-            <div className="relative h-6 w-6">
-              <div className="absolute inset-0 bg-black rounded-full"></div>
-              <div className="absolute inset-0 bg-black rounded-full translate-x-0.5 translate-y-0.5"></div>
-            </div>
-            <span>Kanny © 2025</span>
+            <Link href="/" aria-label="Go to Home" className="flex items-center gap-2">
+              <div className="relative h-6 w-6">
+                <div className="absolute inset-0 bg-black rounded-full"></div>
+                <div className="absolute inset-0 bg-black rounded-full translate-x-0.5 translate-y-0.5"></div>
+              </div>
+              <span>Kanny © 2025</span>
+            </Link>
           </div>
           <span>Designed by 17/32</span>
         </div>
